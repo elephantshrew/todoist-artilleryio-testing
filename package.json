@@ -1,0 +1,15 @@
+{
+  "name": "artilleryio-project",
+  "version": "1.0.0",
+  "description": "Performance testing with artillery.io",
+  "main": "index.js",
+  "scripts": {
+    "test": "artillery run --output results/report.json performance.yml && artillery report --output results/report.html results/report.json"
+  },
+  "author": "William Cho",
+  "license": "ISC",
+  "dependencies": {
+    "artillery": "^1.6.2",
+    "dotenv": "^8.2.0"
+  }
+}

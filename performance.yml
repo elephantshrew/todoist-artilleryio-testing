@@ -1,0 +1,45 @@
+config:
+  target: "https://api.todoist.com"
+  phases:
+    - duration: 5
+      arrivalRate: 1
+      name: "Warmup"
+    - duration: 10
+      arrivalRate: 2
+      name: "Ramp up load"
+    - duration: 20
+      arrivalRate: 4
+      name: "Sustained load"
+  defaults:
+    headers: 
+      Authorization: Bearer {{ $processEnvironment.TODOIST_API_TOKEN }}
+      Context-type: application/json
+
+scenarios:
+  - flow:
+      - get:
+          url: "/rest/v1/tasks"
+      - post:
+          url: "/rest/v1/tasks"
+          json:
+            content: "testTask"
+            due_string: "tomorrow at 12:00"
+            priority: 4
+          capture:
+            json: "$.id"
+            as: "id"
+      #- log: "Current id is  {{ id }}"
+      - get:
+          url: "/rest/v1/tasks/{{ id }}"
+      - post:
+          url: "/rest/v1/tasks/{{ id }}"
+          json:
+            content: "updatedTestTask"
+      - post:
+          url: "/rest/v1/tasks/{{ id }}/close"
+      - post:
+          url: "/rest/v1/tasks/{{ id }}/reopen"          
+      - delete:
+          url: "/rest/v1/tasks/{{ id }}"
+        
+  
